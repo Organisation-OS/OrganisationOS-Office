@@ -29,9 +29,9 @@ module.exports = [{
   tags: ["code"],
   parser: "markdownit",
   function: function versionHeadingOutsideCode(params, onError) {
-    if (!/(^|[/\\])(?:CHANGELOG|ROADMAP)\.md$/i.test(params.name)) {
-      return;
-    }
+    const versionHeading = /(?:^|[/\\])ROADMAP\.md$/i.test(params.name)
+      ? /^##[ \t]+(?:Version[ \t]+)?\d+\.\d+(?:\.\d+)?(?:\s|$)/i
+      : /^##[ \t]+\d+\.\d+\.\d+(?:\s|$)/;
     const tokens = params.parsers ? params.parsers.markdownit.tokens : params.tokens;
     for (const token of tokens) {
       if (token.type !== "fence" && token.type !== "code_block") {
@@ -42,7 +42,7 @@ module.exports = [{
       // Intentional examples must explicitly disable this rule around the block.
       const lines = token.content.split("\n");
       for (let index = 0; index < lines.length; index++) {
-        if (/^##[ \t]+(?:Version[ \t]+)?\d+\.\d+(?:\.\d+)?(?:\s|$)/i.test(lines[index])) {
+        if (versionHeading.test(lines[index])) {
           onError({
             lineNumber: token.map[0] + index + (token.type === "fence" ? 2 : 1),
             detail: "Move the version heading outside code, or explicitly exempt this intentional example",
