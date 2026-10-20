@@ -1,0 +1,50 @@
+{
+  "schema": "organisationos-office-sources-v1",
+  "upstream": {
+    "repository": "https://github.com/ONLYOFFICE/DocumentServer.git",
+    "tag": "v10.0.0",
+    "commit": "16bac9f9ad54c8145a58e23446c504b5727729ac"
+  },
+  "components": {
+    "core": {
+      "repository": "https://github.com/ONLYOFFICE/core.git",
+      "commit": "8d143f09d0fe13f663db5a2394ab8819b1273957"
+    },
+    "core-fonts": {
+      "repository": "https://github.com/ONLYOFFICE/core-fonts.git",
+      "commit": "7030c6681fb5bbed560675cb42422f91df15d5c9"
+    },
+    "dictionaries": {
+      "repository": "https://github.com/ONLYOFFICE/dictionaries.git",
+      "commit": "d3223bbb777883db66ac3cd249f71c6ebdc992c7"
+    },
+    "document-formats": {
+      "repository": "https://github.com/ONLYOFFICE/document-formats.git",
+      "commit": "27188bac1f82c6ff0e7f02235cdbca22053a768e"
+    },
+    "document-templates": {
+      "repository": "https://github.com/ONLYOFFICE/document-templates.git",
+      "commit": "0a52fb76fa53fddf7d70da28878537cde3d29421"
+    },
+    "sdkjs": {
+      "repository": "https://github.com/ONLYOFFICE/sdkjs.git",
+      "commit": "3e19b57c8dfd43d876e4a9c1023d555632b61505"
+    },
+    "server": {
+      "repository": "https://github.com/ONLYOFFICE/server.git",
+      "commit": "3e71b09caf66c4ac0d43106ea4922f6ddfa76043"
+    },
+    "web-apps": {
+      "repository": "https://github.com/ONLYOFFICE/web-apps.git",
+      "commit": "f4f1c88937717f9b41e2f8a864b8aeffa21e3a2a"
+    }
+  },
+  "buildTools": {
+    "repository": "https://github.com/ONLYOFFICE/build_tools.git",
+    "commit": "a9f9895b172b09595abcafe85d56fab163f9ecb7"
+  },
+  "licenseSha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040",
+  "packageVersion": "10.0.0-oos.1",
+  "artifactStatus": "NOT_BUILT",
+  "reproducibility": "NOT_YET_QUALIFIED"
+}
