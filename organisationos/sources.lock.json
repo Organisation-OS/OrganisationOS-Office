@@ -65,5 +65,9 @@
     "image": "ubuntu@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac",
     "platform": "linux/amd64",
     "maximumJobs": 8
+  },
+  "chromiumBuildDependencies": {
+    "depot_tools": "1eb46f8b23b4c6b3caa2be8e05999b6d1f4d0253",
+    "v8_8.9": "a2d8eca22ad478a95ca67bb2421a9a2535113925"
   }
 }

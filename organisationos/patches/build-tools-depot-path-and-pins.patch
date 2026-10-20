@@ -1,0 +1,25 @@
+diff --git a/scripts/core_common/modules/v8_89.py b/scripts/core_common/modules/v8_89.py
+index 4a792bf..98aec5a 100644
+--- a/scripts/core_common/modules/v8_89.py
++++ b/scripts/core_common/modules/v8_89.py
+@@ -218,8 +218,11 @@ def make():
+     
+   if not base.is_dir("depot_tools"):
+     base.cmd("git", ["clone", "https://chromium.googlesource.com/chromium/tools/depot_tools.git"])
++    base.cmd("git", ["-C", "depot_tools", "checkout", "--detach", "1eb46f8b23b4c6b3caa2be8e05999b6d1f4d0253"])
+     change_bootstrap()
+ 
++  os.environ["DEPOT_TOOLS_DIR"] = os.path.abspath(base_dir + "/depot_tools")
++  os.environ["DEPOT_TOOLS_UPDATE"] = "0"
+   os.environ["PATH"] = base_dir + "/depot_tools" + os.pathsep + os.environ["PATH"]
+ 
+   if ("windows" == base.host_platform()):
+@@ -233,7 +236,7 @@ def make():
+       os.chdir("v8")
+       base.cmd("git", ["config", "--system", "core.longpaths", "true"], True)
+       os.chdir("../")
+-    v8_branch_version = "remotes/branch-heads/8.9"
++    v8_branch_version = "a2d8eca22ad478a95ca67bb2421a9a2535113925"
+     if ("mac" == base.host_platform()):
+       v8_branch_version = "remotes/branch-heads/9.9"
+     base.cmd("./depot_tools/gclient", ["sync", "-r", v8_branch_version], True)
