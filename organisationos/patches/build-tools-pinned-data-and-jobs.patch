@@ -1,0 +1,191 @@
+diff --git a/scripts/base.py b/scripts/base.py
+index 87a2b39..a3250dc 100644
+--- a/scripts/base.py
++++ b/scripts/base.py
+@@ -1590,9 +1590,9 @@ def copy_sdkjs_plugins_server(dst_dir, is_name_as_guid=False, is_desktop_local=F
+ def support_old_versions_plugins(out_dir):
+   if is_file(out_dir + "/pluginBase.js"):
+     return
+-  download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.js", out_dir + "/plugins.js")
+-  download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins-ui.js", out_dir + "/plugins-ui.js")
+-  download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.css", out_dir + "/plugins.css")
++  download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins.js", out_dir + "/plugins.js")
++  download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins-ui.js", out_dir + "/plugins-ui.js")
++  download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins.css", out_dir + "/plugins.css")
+   content_plugin_base = ""
+   with open(get_path(out_dir + "/plugins.js"), "r") as file:
+     content_plugin_base += file.read()
+@@ -1986,8 +1986,8 @@ def check_python():
+   directory_bin = __file__script__path__ + "/../tools/linux/python3/bin"
+ 
+   if not is_dir(directory + "/python3"):
+-    download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/python3.tar.gz', directory + "/python3.tar.gz")
+-    download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/extract.sh', directory + "/extract.sh")
++    download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/python/python3.tar.gz', directory + "/python3.tar.gz")
++    download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/python/extract.sh', directory + "/extract.sh")
+     cmd_in_dir(directory, "chmod", ["+x", "./extract.sh"])
+     cmd_in_dir(directory, "./extract.sh")
+   directory_bin = directory_bin.replace(" ", "\\ ")
+diff --git a/scripts/core_common/modules/cef.py b/scripts/core_common/modules/cef.py
+index 6d6fb26..657be6f 100644
+--- a/scripts/core_common/modules/cef.py
++++ b/scripts/core_common/modules/cef.py
+@@ -27,7 +27,7 @@ def make():
+     if not config.check_option("platform", platform):
+       continue
+ 
+-    url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/cef/"
++    url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/cef/"
+     archive_name = "./cef_binary.7z"
+ 
+     if (-1 != platform.find("_xp")):
+diff --git a/scripts/core_common/modules/glew.py b/scripts/core_common/modules/glew.py
+index 8154318..958da69 100644
+--- a/scripts/core_common/modules/glew.py
++++ b/scripts/core_common/modules/glew.py
+@@ -26,7 +26,7 @@ def make():
+   base.common_check_version("glew", "1", clean)
+ 
+   if not base.is_dir("glew-2.1.0"):
+-    base.download("https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/glew/glew-2.1.0-win32.zip", "./archive.zip")
++    base.download("https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/glew/glew-2.1.0-win32.zip", "./archive.zip")
+     base.extract("./archive.zip", "./")
+     base.delete_file("./archive.zip")
+ 
+diff --git a/scripts/deploy_server.py b/scripts/deploy_server.py
+index df553a2..e0e723f 100644
+--- a/scripts/deploy_server.py
++++ b/scripts/deploy_server.py
+@@ -140,9 +140,9 @@ def make():
+     else:
+       base.generate_sdkjs_plugin_list(js_dir + "/sdkjs-plugins/plugin-list-default.json")
+     base.create_dir(js_dir + "/sdkjs-plugins/v1")
+-    base.download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.js", js_dir + "/sdkjs-plugins/v1/plugins.js")
+-    base.download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins-ui.js", js_dir + "/sdkjs-plugins/v1/plugins-ui.js")
+-    base.download("https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.css", js_dir + "/sdkjs-plugins/v1/plugins.css")
++    base.download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins.js", js_dir + "/sdkjs-plugins/v1/plugins.js")
++    base.download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins-ui.js", js_dir + "/sdkjs-plugins/v1/plugins-ui.js")
++    base.download("https://raw.githubusercontent.com/ONLYOFFICE/onlyoffice.github.io/f3263c055c25875874004463b46c2e6a7000a9fd/sdkjs-plugins/v1/plugins.css", js_dir + "/sdkjs-plugins/v1/plugins.css")
+     base.support_old_versions_plugins(js_dir + "/sdkjs-plugins")
+ 
+     # tools
+diff --git a/scripts/qmake.py b/scripts/qmake.py
+index 2d6ad40..5d450b9 100644
+--- a/scripts/qmake.py
++++ b/scripts/qmake.py
+@@ -20,7 +20,7 @@ def get_make_file_suffix(platform):
+ 
+ def get_j_num():
+   if ("0" != config.option("multiprocess")):
+-    return ["-j" + str(multiprocessing.cpu_count())]
++    return ["-j" + str(min(8, len(os.sched_getaffinity(0))))]
+   return []
+ 
+ def check_support_platform(platform):
+diff --git a/tools/linux/arm/cross_arm64/build_qt.py b/tools/linux/arm/cross_arm64/build_qt.py
+index e76cf60..9c448d2 100644
+--- a/tools/linux/arm/cross_arm64/build_qt.py
++++ b/tools/linux/arm/cross_arm64/build_qt.py
+@@ -72,7 +72,7 @@ def make(arm_toolchain_bin=""):
+   for param in qt_params:
+       qt_params_str += (param + " ")
+ 
+-  qt_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/qt-everywhere-src-5.15.2.tar.xz"
++  qt_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/qt-everywhere-src-5.15.2.tar.xz"
+   if not base.is_file("./qt_source_5.15.2.tar.xz"):
+     base.download(qt_url, "./qt_source_5.15.2.tar.xz")
+   
+diff --git a/tools/linux/arm/cross_arm64/fetch_qt.py b/tools/linux/arm/cross_arm64/fetch_qt.py
+index 1b1f2ff..c9a6806 100644
+--- a/tools/linux/arm/cross_arm64/fetch_qt.py
++++ b/tools/linux/arm/cross_arm64/fetch_qt.py
+@@ -9,7 +9,7 @@ import base
+ 
+ def make():
+   qt_build_path = os.path.dirname(os.path.abspath(__file__)) + "/qt_build/Qt-5.15.2"
+-  qt_binary_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/qt_binary_linux_arm64.7z"
++  qt_binary_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/qt_binary_linux_arm64.7z"
+   
+   if not base.is_file("./qt_binary_linux_arm64.7z"):
+     base.download(qt_binary_url, "./qt_binary_linux_arm64.7z")
+diff --git a/tools/linux/python.sh b/tools/linux/python.sh
+index d6ff8df..6ef3b33 100755
+--- a/tools/linux/python.sh
++++ b/tools/linux/python.sh
+@@ -1,8 +1,9 @@
+ #!/bin/bash
+ 
+-wget https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/python3.tar.gz
+-wget https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/extract.sh
++wget https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/python/python3.tar.gz
++wget https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/python/extract.sh
+ 
++sha256sum python3.tar.gz extract.sh > /work/build-evidence/python-download-sha256.txt
+ chmod +x ./extract.sh
+ ./extract.sh
+ 
+diff --git a/tools/linux/qt_binary_build.py b/tools/linux/qt_binary_build.py
+index edf5054..b3bb551 100755
+--- a/tools/linux/qt_binary_build.py
++++ b/tools/linux/qt_binary_build.py
+@@ -10,7 +10,7 @@ import deps
+ def install_qt():
+   # qt
+   if not base.is_file("./qt_source_5.9.9.tar.xz"):
+-    base.download("https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/qt-everywhere-opensource-src-5.9.9.tar.xz", "./qt_source_5.9.9.tar.xz")
++    base.download("https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/qt-everywhere-opensource-src-5.9.9.tar.xz", "./qt_source_5.9.9.tar.xz")
+ 
+   if not base.is_dir("./qt-everywhere-opensource-src-5.9.9"):
+     base.cmd("tar", ["-xf", "./qt_source_5.9.9.tar.xz"])
+diff --git a/tools/linux/qt_binary_fetch.py b/tools/linux/qt_binary_fetch.py
+index 2385af2..9d5c844 100755
+--- a/tools/linux/qt_binary_fetch.py
++++ b/tools/linux/qt_binary_fetch.py
+@@ -6,7 +6,7 @@ sys.path.append('../../scripts')
+ 
+ import base
+ 
+-URL = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/"
++URL = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/"
+ 
+ SYSROOTS = {
+   "amd64": "qt_binary_5.9.9_gcc_64.7z",
+diff --git a/tools/linux/sysroot/fetch.py b/tools/linux/sysroot/fetch.py
+index bbf0088..3f576ef 100755
+--- a/tools/linux/sysroot/fetch.py
++++ b/tools/linux/sysroot/fetch.py
+@@ -6,7 +6,7 @@ sys.path.append('../../../scripts')
+ 
+ import base
+ 
+-URL = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/sysroot/"
++URL = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/sysroot/"
+ 
+ SYSROOTS = {
+   "amd64": "ubuntu16-amd64-sysroot.tar.gz",
+diff --git a/tools/win/arm64/build_qt.py b/tools/win/arm64/build_qt.py
+index 467b1d7..2f69f7c 100644
+--- a/tools/win/arm64/build_qt.py
++++ b/tools/win/arm64/build_qt.py
+@@ -55,7 +55,7 @@ def make():
+   for param in qt_params:
+       qt_params_str += (param + " ")
+ 
+-  qt_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/qt-everywhere-src-5.15.2.tar.xz"
++  qt_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/qt-everywhere-src-5.15.2.tar.xz"
+   if not base.is_file("./qt_source_5.15.2.tar.xz"):
+     base.download(qt_url, "./qt_source_5.15.2.tar.xz")
+   
+diff --git a/tools/win/arm64/fetch_qt.py b/tools/win/arm64/fetch_qt.py
+index e3b7994..470b854 100644
+--- a/tools/win/arm64/fetch_qt.py
++++ b/tools/win/arm64/fetch_qt.py
+@@ -6,7 +6,7 @@ import base
+ 
+ def make():
+   qt_build_path = os.path.dirname(os.path.abspath(__file__)) + "/qt_build/Qt-5.15.2"
+-  qt_binary_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/qt/qt_binary_win_arm64.7z"
++  qt_binary_url = "https://github.com/ONLYOFFICE-data/build_tools_data/raw/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/qt/qt_binary_win_arm64.7z"
+   
+   if not base.is_file("./qt_binary_win_arm64.7z"):
+     base.download(qt_binary_url, "./qt_binary_win_arm64.7z")

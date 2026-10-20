@@ -37,6 +37,16 @@
     "web-apps": {
       "repository": "https://github.com/ONLYOFFICE/web-apps.git",
       "commit": "f4f1c88937717f9b41e2f8a864b8aeffa21e3a2a"
+    },
+    "document-server-integration": {
+      "repository": "https://github.com/ONLYOFFICE/document-server-integration.git",
+      "commit": "d57c945a1b971627a35c45709efe7a5167d95199",
+      "reason": "Additional build_tools server input; not an original DocumentServer gitlink"
+    },
+    "onlyoffice.github.io": {
+      "repository": "https://github.com/ONLYOFFICE/onlyoffice.github.io.git",
+      "commit": "f3263c055c25875874004463b46c2e6a7000a9fd",
+      "reason": "Additional build_tools server input; not an original DocumentServer gitlink"
     }
   },
   "buildTools": {
@@ -46,5 +56,14 @@
   "licenseSha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040",
   "packageVersion": "10.0.0-oos.1",
   "artifactStatus": "NOT_BUILT",
-  "reproducibility": "NOT_YET_QUALIFIED"
+  "reproducibility": "NOT_YET_QUALIFIED",
+  "buildData": {
+    "repository": "https://github.com/ONLYOFFICE-data/build_tools_data.git",
+    "commit": "382ce03a22c5bfb98848b1483a6716b81ee4aeb3"
+  },
+  "buildEnvironment": {
+    "image": "ubuntu@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac",
+    "platform": "linux/amd64",
+    "maximumJobs": 8
+  }
 }

@@ -52,3 +52,9 @@
 [submodule "document-formats"]
 	path = document-formats
 	url = https://github.com/ONLYOFFICE/document-formats.git
+[submodule "document-server-integration"]
+	path = document-server-integration
+	url = https://github.com/ONLYOFFICE/document-server-integration.git
+[submodule "onlyoffice.github.io"]
+	path = onlyoffice.github.io
+	url = https://github.com/ONLYOFFICE/onlyoffice.github.io.git
