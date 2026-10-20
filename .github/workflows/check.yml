@@ -1,18 +1,20 @@
 name: check
 on: [push]
 jobs:
-  markdownlint:
+  rumdl:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 18
-        uses: actions/setup-node@v1
+      - name: Install rumdl
+        uses: rvben/rumdl@v0.3.0
         with:
-            node-version: 18
-      - name: run markdownlint linter
+          version: "0.3.0"
+          install-only: true
+      - name: run rumdl
         run: |
-          npm install -g markdownlint-cli@0.39.0
-          markdownlint --rules .github/markdownlint/closed-code-fence.cjs -- CHANGELOG.md ROADMAP.md
+          git ls-files -z -- '*.md' |
+            xargs -0 -r rumdl check --config .rumdl.toml --no-cache \
+              --deny-config-warnings --
   spellchecker:
     runs-on: ubuntu-latest
     steps:

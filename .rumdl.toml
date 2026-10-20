@@ -1,0 +1,15 @@
+[global]
+extend-enable = ["MD070"]
+# These additional style rules were not enforced by markdownlint-cli 0.39.0.
+# Keep existing generic link labels, prose spacing, and list indentation.
+disable = ["MD059", "MD064", "MD077"]
+
+[MD024]
+siblings-only = true
+
+[per-file-ignores]
+# Preserve the existing landing page and question-based issue template layout.
+"Readme.md" = ["MD009", "MD013", "MD026", "MD041", "MD047"]
+".github/ISSUE_TEMPLATE.md" = ["MD013", "MD041"]
+# Preserve legacy changelog whitespace and line wrapping during migration.
+"CHANGELOG.md" = ["MD009", "MD013"]
