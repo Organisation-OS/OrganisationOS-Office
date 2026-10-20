@@ -1,7 +1,16 @@
 diff --git a/scripts/core_common/modules/v8_89.py b/scripts/core_common/modules/v8_89.py
-index 4a792bf..98aec5a 100644
+index 4a792bf..293a6a2 100644
 --- a/scripts/core_common/modules/v8_89.py
 +++ b/scripts/core_common/modules/v8_89.py
+@@ -39,7 +39,7 @@ def change_bootstrap():
+   if ("windows" == base.host_platform()):
+     content += "infra/3pp/tools/cpython3/${platform} version:2@3.11.8.chromium.35\n\n"
+   else:
+-    content += "infra/3pp/tools/cpython3/${platform} version:2@3.8.10.chromium.23\n\n"
++    content += "infra/3pp/tools/cpython3/${platform} version:2@3.11.8.chromium.35\n\n"
+ 
+   content += "@Subdir git\n"
+   content += "infra/3pp/tools/git/${platform} version:2@2.41.0.chromium.11\n"
 @@ -218,8 +218,11 @@ def make():
      
    if not base.is_dir("depot_tools"):
