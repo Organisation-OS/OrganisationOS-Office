@@ -39,3 +39,6 @@ commande version avec JWT natif et refus d'un JWT invalide sur HTTPS ; contrôle
 les WebSockets réellement transmis par NGINX Proxy Manager. L'activation du
 connecteur Office reste soumise à la réauthentification native et à sa liaison
 GED. Une réponse 200 de l'API JavaScript seule ne prouve pas une sauvegarde GED.
+
+
+After a native Core/Portal upgrade, use `verify-installed.py` for read-only verification. It checks the original signed installation and exact proxy bytes plus the currently active CP-signed healthy application bundle. It does not reprovision nginx or claim a new installation. The operator delivery wrapper additionally verifies the original progress gateway receipt, backend and service override before submitting a native update. Mutating install/revert still requires the original exact application precondition; a later infrastructure change needs a fresh scoped native capsule.
