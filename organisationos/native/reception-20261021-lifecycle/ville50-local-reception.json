@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "localHealth": {
+    "status": "HEALTHY_LOCAL_ONLY",
+    "instanceId": "b7a1f6b1-c4aa-4de7-95fb-29d509d3398d",
+    "imageId": "sha256:c79aa0259070234ef10cbdb5ab11d6305870ce69ac0929b97066543ef68c317a",
+    "runtimeEpoch": "7dd775bf-8543-4b9e-aee0-4c9eddf36408",
+    "scope": "LOCAL_ENGINE_ONLY",
+    "publicTlsAndGedReception": "NOT_ASSESSED"
+  },
+  "sameContainerOnReplay": true,
+  "sameEpochOnReplay": true,
+  "sameSecretOnReplay": true,
+  "actualEngineToNativeApi": {
+    "origin": "https://api.villesadp.ca",
+    "result": "200 application/json; charset=utf-8",
+    "authenticatedSession": false
+  },
+  "imageUnchanged": true,
+  "publicOfficeTlsQualified": false,
+  "realGedProviderActivated": false
+}

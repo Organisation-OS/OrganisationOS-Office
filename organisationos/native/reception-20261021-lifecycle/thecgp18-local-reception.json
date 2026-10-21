@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "localHealth": {
+    "status": "HEALTHY_LOCAL_ONLY",
+    "instanceId": "27c0be38-60bd-4dce-bb28-ef0088716a25",
+    "imageId": "sha256:c79aa0259070234ef10cbdb5ab11d6305870ce69ac0929b97066543ef68c317a",
+    "runtimeEpoch": "75fd409e-6b53-4ffb-9fbd-bae80b976ebe",
+    "scope": "LOCAL_ENGINE_ONLY",
+    "publicTlsAndGedReception": "NOT_ASSESSED"
+  },
+  "sameContainerOnReplay": true,
+  "sameEpochOnReplay": true,
+  "sameSecretOnReplay": true,
+  "actualEngineToNativeApi": {
+    "origin": "https://portal.thecgp.com",
+    "result": "200 application/json; charset=utf-8",
+    "authenticatedSession": false
+  },
+  "imageUnchanged": true,
+  "publicOfficeTlsQualified": false,
+  "realGedProviderActivated": false
+}
