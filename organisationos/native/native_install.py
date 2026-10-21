@@ -13,7 +13,9 @@ def trusted(p):
  p=P(p);s=p.lstat();require(p.resolve()==p and s.st_uid==0 and not s.st_mode&0o022 and stat.S_ISREG(s.st_mode) and s.st_nlink==1);return p
 
 def directory(p,mode=0o755):
- p=P(p);p.mkdir(mode=mode,exist_ok=True);s=p.lstat();require(p.resolve()==p and s.st_uid==0 and stat.S_ISDIR(s.st_mode) and stat.S_IMODE(s.st_mode)==mode)
+ p=P(p)
+ if not p.exists():p.mkdir(mode=mode);p.chmod(mode)
+ s=p.lstat();require(p.resolve()==p and s.st_uid==0 and stat.S_ISDIR(s.st_mode) and stat.S_IMODE(s.st_mode)==mode)
 def write(p,b,mode=0o644):
  p=P(p);b=b if isinstance(b,bytes)else canonical(b)+b'\n'
  if p.exists():trusted(p);require(p.read_bytes()==b and stat.S_IMODE(p.stat().st_mode)==mode);return
@@ -83,7 +85,7 @@ def main():
   firewall='[Unit]\nDescription=OrganisationOS Office restricted egress\nAfter=docker.service\nBefore=organisationos-office.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 '+str(release/'firewall.py')+'\n[Install]\nWantedBy=multi-user.target\n'
   service='[Unit]\nDescription=OrganisationOS Office Powered by ONLYOFFICE\nAfter=docker.service organisationos-office-firewall.service\nRequires=docker.service organisationos-office-firewall.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 '+str(release/'controller.py')+' start\nExecStop=/usr/bin/python3 '+str(release/'controller.py')+' stop\nTimeoutStartSec=180\nTimeoutStopSec=180\n[Install]\nWantedBy=multi-user.target\n'
   write('/etc/systemd/system/organisationos-office-firewall.service',firewall.encode());write('/etc/systemd/system/organisationos-office.service',service.encode());run(['/usr/bin/systemctl','daemon-reload']);run(['/usr/bin/systemctl','enable','--now','organisationos-office-firewall.service','organisationos-office.service'])
-  receipt={'schema':'oos-office-runtime-installation-v1','status':'INSTALLED_LOCAL_RECEPTION_PENDING','instanceId':m['instanceId'],'sequence':m['sequence'],'manifestSha256':envSha,'recipeSha256':m['recipe']['sha256'],'imageId':IMAGE,'imageArchiveSha256':m['image']['sha256'],'privateListener':'127.0.0.1:18080','publicExposureCreated':False,'vaultCredentialImported':False,'gedBindingActivated':False,'secretGeneratedLocally':True,'noWorkstationChange':True}
+  receipt={'schema':'oos-office-runtime-installation-v1','status':'INSTALLED_LOCAL_RECEPTION_PENDING','instanceId':m['instanceId'],'sequence':m['sequence'],'manifestSha256':envSha,'recipeSha256':m['recipe']['sha256'],'imageId':IMAGE,'imageArchiveSha256':m['image']['sha256'],'privateListener':'127.0.0.1:18080','publicExposureCreated':False,'vaultCredentialImported':False,'gedBindingActivated':False,'secretGeneratedLocally':True,'noWorkstationChange':True,'bootstrapSha256':digest(P(__file__).read_bytes())}
   write(root/(envSha+'.receipt.json'),receipt,0o600);fd,temp=tempfile.mkstemp(prefix='.current-',dir=root)
   with os.fdopen(fd,'wb')as f:os.fchmod(f.fileno(),0o600);f.write(canonical(receipt));f.flush();os.fsync(f.fileno())
   os.replace(temp,root/'current.json');print(json.dumps(receipt))
