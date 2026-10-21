@@ -1,0 +1,19 @@
+--- a/DocService/sources/DocsCoServer.js
++++ b/DocService/sources/DocsCoServer.js
+@@ -1660,13 +1660,13 @@
+     const res = {decoded: null, description: null, code: null, token};
+     const secret = yield tenantManager.getTenantSecret(ctx, type);
+     if (undefined == secret) {
+-      ctx.logger.warn('empty secret: token = %s', token);
++      ctx.logger.warn('JWT verification secret unavailable');
+     }
+     try {
+       res.decoded = jwt.verify(token, utils.getJwtHsKey(secret), tenTokenVerifyOptions);
+-      ctx.logger.debug('checkJwt success: decoded = %j', res.decoded);
++      ctx.logger.debug('JWT verification succeeded');
+     } catch (err) {
+-      ctx.logger.warn('checkJwt error: name = %s message = %s token = %s', err.name, err.message, token);
++      ctx.logger.warn('JWT verification rejected: %s', err.name);
+       if ('TokenExpiredError' === err.name) {
+         res.code = constants.JWT_EXPIRED_CODE;
+         res.description = constants.JWT_EXPIRED_REASON + err.message;
