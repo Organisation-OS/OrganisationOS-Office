@@ -1,5 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+# build_tools/version differs from the pinned DocumentServer release. Never inherit its default.
+export PRODUCT_VERSION=10.0.0
+export BUILD_NUMBER=1
 mkdir -p /work/build-evidence
 exec > >(tee /work/build-evidence/build.log) 2>&1
 trap 'status=$?; printf "%s\n" "$status" > /work/build-evidence/exit-status; dpkg-query -W > /work/build-evidence/toolchain-packages.tsv; exit "$status"' EXIT
