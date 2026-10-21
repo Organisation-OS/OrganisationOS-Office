@@ -6,6 +6,8 @@ RUN rm -rf /var/www/onlyoffice/documentserver /var/www/onlyoffice/documentserver
 COPY documentserver/ /var/www/onlyoffice/documentserver/
 # Pinned upstream JSON configuration helper; this is not a document-server engine.
 COPY --from=runtime-base /var/www/onlyoffice/documentserver/npm/ /var/www/onlyoffice/documentserver/npm/
+COPY configuration/default.json /etc/onlyoffice/documentserver/default.json
+COPY configuration/production-linux.json /etc/onlyoffice/documentserver/production-linux.json
 COPY provenance.json /var/www/onlyoffice/documentserver/web-apps/organisationos/provenance.json
 COPY source.html /var/www/onlyoffice/documentserver/web-apps/organisationos/source.html
 COPY oos-entrypoint.sh /usr/local/bin/oos-office-entrypoint
