@@ -43,4 +43,22 @@ class NativeOffice(unittest.TestCase):
   for binding,rooms in [(1,0),(0,1)]:
    with self.assertRaises(ValueError):self.gate(binding,rooms)
  def test_stop_allows_unbound_empty_instance(self):self.gate(0,0)
+ def test_historical_native_sql_adapter_stop_guard(self):
+  (self.root/'policy').write_text(json.dumps({'runtime':{'adapter':'historical-web-v1'}}));(self.root/'supervisor').write_text(json.dumps({'root':str(self.root),'policy':str(self.root/'policy')}))
+  class Historical:
+   def __init__(self,p,**kw):self.deferred=kw['defer_preserved_writers']
+  for blocked in [False,True]:
+   def sql(runtime,q):
+    self.assertTrue(runtime.deferred)
+    return b'document_connector_bindings\ndocument_office_rooms\n'if q=='SHOW TABLES;'else (b'1'if blocked else b'0')
+   with patch.dict(sys.modules,{'historical_web_runtime':types.SimpleNamespace(HistoricalWebRuntime=Historical),'historical_web_backup':types.SimpleNamespace(sql=sql)}):
+    if blocked:
+     with self.assertRaises(ValueError):controller.stop_allowed({'supervisor':str(self.root/'supervisor'),'instanceId':self.m['instanceId']})
+    else:controller.stop_allowed({'supervisor':str(self.root/'supervisor'),'instanceId':self.m['instanceId']})
+ def test_signed_intermediate_required_for_uninstalled_sequence(self):
+  prior=copy.deepcopy(self.m);prior.update(schema='oos-office-runtime-release-v2',sequence=2,publicApiOrigin='https://portal.thecgp.com');prior['recipe']['sha256']='7e5f03bfe6116ad98206d4d148785c2f6f66b0d0e33ef082449692bbd11e72a5';m=copy.deepcopy(prior);m['sequence']=3;m['recipe']['version']='0.1.1';state={'sequence':1,'recipeSha256':prior['recipe']['sha256']}
+  n.admit_transition(state,m,'a'*64,prior)
+  with self.assertRaises(ValueError):n.admit_transition(state,m,'a'*64)
+  prior['instanceId']='b7a1f6b1-c4aa-4de7-95fb-29d509d3398d'
+  with self.assertRaises(ValueError):n.admit_transition(state,m,'a'*64,prior)
 if __name__=='__main__':unittest.main()

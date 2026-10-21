@@ -17,12 +17,15 @@ def stop_allowed(c):
  if p['runtime'].get('adapter')=='historical-web-v1':
   from historical_web_runtime import HistoricalWebRuntime
   runtime=HistoricalWebRuntime(p,defer_preserved_writers=True)
+  from historical_web_backup import sql
+  query=lambda statement:sql(runtime,statement)
  else:
   from generic_runtime import GenericRuntime
   runtime=GenericRuntime(p)
- tables=set(runtime.sql('SHOW TABLES;').decode().splitlines())
- if 'document_connector_bindings'in tables:require(runtime.sql("SELECT COUNT(*) FROM document_connector_bindings WHERE organisation_id='"+c['instanceId']+"' AND engine='OFFICE' AND enabled=1;").strip()==b'0')
- if 'document_office_rooms'in tables:require(runtime.sql("SELECT COUNT(*) FROM document_office_rooms WHERE organisation_id='"+c['instanceId']+"' AND state='OPEN';").strip()==b'0')
+  query=runtime.sql
+ tables=set(query('SHOW TABLES;').decode().splitlines())
+ if 'document_connector_bindings'in tables:require(query("SELECT COUNT(*) FROM document_connector_bindings WHERE organisation_id='"+c['instanceId']+"' AND engine='OFFICE' AND enabled=1;").strip()==b'0')
+ if 'document_office_rooms'in tables:require(query("SELECT COUNT(*) FROM document_office_rooms WHERE organisation_id='"+c['instanceId']+"' AND state='OPEN';").strip()==b'0')
  # Suspend the native binding only after the last editor's acknowledged close.
  # A nonzero count refuses container stop; the retained engine is never force-killed here.
 
