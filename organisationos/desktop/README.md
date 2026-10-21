@@ -50,9 +50,9 @@ native validée; portal:logout doit accompagner l'invalidation de cette session.
 `open:document` doit ouvrir une route éditeur authentifiée autorisée par editorPage,
 pas une URL de blob permanent. Le parcours doit réutiliser OfficeRooms, le coffre
 Office et OfficeReturns/VersionAdmission, avec ACL et antivirus courants, CAS,
-idempotence et récupération privée. Ces adaptateurs HTTP/Portal ne sont pas encore
-installés : les configs de provider restent candidates et aucun bouton fictif
-n'est publié comme fonctionnel.
+idempotence et récupération privée. Les adaptateurs HTTP/Portal sont reçus dans Core 3.18.1 / Portal 3.17.0.
+Leur activation Office en production exige encore la configuration native du
+coffre et du point TLS; les providers Desktop restent candidats sans réception CEF.
 
 Les détections desktop=true, User-Agent et AscDesktopEditor sont uniquement des
 indices d'interface, jamais une preuve d'identité ou une autorisation. Les données

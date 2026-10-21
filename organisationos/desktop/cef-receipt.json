@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/ONLYOFFICE-data/build_tools_data",
+  "commit": "382ce03a22c5bfb98848b1483a6716b81ee4aeb3",
+  "path": "cef/5414/win_64/cef_binary.7z",
+  "gitBlobSha1": "da9b45e9b31a5514b7d7f707adbaf449929cd241",
+  "size": 95544651,
+  "sha256": "0ef79ad22cc1b2e9364e6a165d1ee00f9348b46f6bb94615a48ed402145f741a",
+  "url": "https://raw.githubusercontent.com/ONLYOFFICE-data/build_tools_data/382ce03a22c5bfb98848b1483a6716b81ee4aeb3/cef/5414/win_64/cef_binary.7z",
+  "verification": "HTTPS and exact Git tree/blob identity, archive bytes hashed; no independent vendor signature",
+  "downloadHost": "orchestrator .20",
+  "compiledOrExecuted": false
+}

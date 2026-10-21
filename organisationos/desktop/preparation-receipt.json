@@ -1,0 +1,10 @@
+{
+  "status": "STATIC_PREPARATION_CHECKED",
+  "upstreamModuleHashVerified": true,
+  "wrongSourceRejected": true,
+  "pinnedArchiveHashVerified": true,
+  "patchedPythonParses": true,
+  "patchedModuleSha256": "de75a5b8fb28148888c8b44fa800abfc01832303726aa14bd14cd219408efd1f",
+  "windowsExecuted": false,
+  "compiled": false
+}
