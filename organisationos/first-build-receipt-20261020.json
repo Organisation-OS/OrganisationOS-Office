@@ -1,0 +1,14 @@
+{
+  "schema": "oos-office-first-build-v1",
+  "status": "BUILD_EXIT_0_RUNTIME_NOT_QUALIFIED",
+  "repository": "https://github.com/Organisation-OS/OrganisationOS-Office",
+  "sourceCommit": "ae8c62b82da45f45116a991ae5c9ea641d0423ee",
+  "builderImage": "sha256:d6bafae2a2ec7045cb0bdfb5bba2127c13283806c2fbde7a2335b50bc41cfdd4",
+  "files": 96532,
+  "bytes": 3978046180,
+  "inventorySha256": "0047f63ac3c04b35ef09d133648570d83d7437b5bb1b56c488ac8cd1d5292c40",
+  "buildLogSha256": "51377e0c2d10b578df99f076cd6303d9d59814e0a146589ed2e36958445585ba",
+  "warningReview": "PENDING: optional Metrics native module and example executable copy warnings",
+  "reproducibility": "NOT_YET_QUALIFIED",
+  "distribution": "NOT_DISTRIBUTED"
+}

@@ -1,10 +1,10 @@
 # OrganisationOS Office — Powered by ONLYOFFICE
 
-Fork de ONLYOFFICE DocumentServer v10.0.0, préparé le 20 octobre 2026. Ce dépôt contient une version modifiée de la distribution source ONLYOFFICE développée par Ascensio System SIA. Les modifications actuelles portent sur les références de construction et les notices OrganisationOS. Le moteur et les interfaces amont n’ont pas encore été modifiés. Aucun binaire OrganisationOS Office n’a été construit, publié ou exécuté.
+Fork de ONLYOFFICE DocumentServer v10.0.0, préparé le 20 octobre 2026. Ce dépôt contient une version modifiée de la distribution source ONLYOFFICE développée par Ascensio System SIA. Les modifications actuelles portent sur les références de construction et les notices OrganisationOS. Le moteur et les interfaces amont n’ont pas encore été modifiés. Une première construction du serveur a terminé avec un code de sortie 0 depuis le commit `ae8c62b82da45f45116a991ae5c9ea641d0423ee` ; son reçu est dans `first-build-receipt-20261020.json`. Le moteur n’a pas encore reçu sa qualification de fonctionnement et aucun serveur issu du fork n’est distribué en production. Une seconde construction propre est en cours ; la reproductibilité n’est pas encore acquise.
 
 Les composants directs et build_tools sont épinglés dans `sources.lock.json`. Les URL des sous-modules sont absolues afin qu’un clone du fork ne cherche pas des dépôts Organisation-OS inexistants. Les notices, marques, crédits et licence amont sont conservés. Le titre ci-dessus identifie l’intégration ; il ne prétend pas à une édition officielle ni à une approbation de l’éditeur.
 
-## Construction et qualification restantes
+## Construction et qualification
 
 Utiliser un environnement DEV dédié Ubuntu 24.04 x64 selon la recette amont, au moins 4 cœurs, 8 Go de mémoire, 100 Go SSD libres et 4 Go swap. Les prérequis hôte ne doivent pas être installés implicitement sur une production. Le serveur est le seul produit demandé.
 
@@ -25,3 +25,11 @@ Les limites réelles de l’édition v10.0.0 et de cette construction doivent ê
 ## Mises à jour amont
 
 Suivre les versions et avis de sécurité officiels. Créer une branche de succession, mettre à jour séparément les pins et les empreintes de licence, examiner les écarts, rejouer les tests de sauvegarde/concurrence/isolement puis signer une nouvelle version immuable. Conserver l’artefact précédent et les contenus en attente ; le retour du code ne restaure pas les données métier. Les changements OrganisationOS restent dans ce répertoire ou dans des patches nommés avec motif et test associé.
+
+## Reprise de la construction propre du 20 octobre 2026
+
+La seconde construction utilise le conteneur épinglé par digest dans le reçu du banc, avec `xz-utils` nécessaire aux outils LLVM amont. Le marqueur `packages_complete` appartient aux dépendances du conteneur et doit être supprimé avant `deps.py` lors d’une reprise dans un nouveau conteneur ; le garder depuis le worktree ne prouve pas la présence des paquets système.
+
+L’acquisition réseau initiale de V8 a été interrompue après un blocage. La reprise a utilisé uniquement un clone Git des sources au commit `a2d8eca22ad478a95ca67bb2421a9a2535113925`, puis une synchronisation gclient vers cette référence exacte et ses hooks officiels. Aucun objet compilé du moteur n’a été réutilisé. L’outil Ninja téléchargé précédemment a été réutilisé avec son empreinte `09f0e5a8a2cf762b24b4d3ed464ffb2529e650d2efc36bab31da36aa93791efc` ; il s’agit d’un outil de construction, distinct des sorties du moteur. Cette reprise est une intervention documentée, pas encore une recette autonome entièrement qualifiée.
+
+Les avertissements de copie concernant Metrics/modern-syslog et l’exemple Node doivent encore être rapprochés du périmètre serveur exécuté. Le succès de compilation ne constitue pas une réception DOCX/XLSX/PPTX, de coédition, d’antivirus ou de callbacks GED.
