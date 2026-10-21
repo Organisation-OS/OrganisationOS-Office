@@ -55,8 +55,8 @@
   },
   "licenseSha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040",
   "packageVersion": "10.0.0-oos.1",
-  "artifactStatus": "NOT_BUILT",
-  "reproducibility": "NOT_YET_QUALIFIED",
+  "artifactStatus": "SOURCE_BUILD_PASS_RUNTIME_AND_ISOLATED_GED_RECEIVED",
+  "reproducibility": "NOT_QUALIFIED_FOR_COMPLETE_OFFICE_BUILD",
   "buildData": {
     "repository": "https://github.com/ONLYOFFICE-data/build_tools_data.git",
     "commit": "382ce03a22c5bfb98848b1483a6716b81ee4aeb3"
@@ -69,5 +69,11 @@
   "chromiumBuildDependencies": {
     "depot_tools": "1eb46f8b23b4c6b3caa2be8e05999b6d1f4d0253",
     "v8_8.9": "a2d8eca22ad478a95ca67bb2421a9a2535113925"
-  }
+  },
+  "runtimeVersion": "10.0.0.2",
+  "engineSourceCommit": "caa398a5e4b29141b45b2efc56a06911990c1957",
+  "runtimeImage": "sha256:c79aa0259070234ef10cbdb5ab11d6305870ce69ac0929b97066543ef68c317a",
+  "runtimeReception": "runtime/reception-v2-20261021.json",
+  "isolatedGedReception": "runtime/ged-isolated-reception-20261021.json",
+  "productionInstallation": "NOT_INSTALLED"
 }
