@@ -14,7 +14,7 @@ COPY oos-entrypoint.sh /usr/local/bin/oos-office-entrypoint
 COPY oos-docservice-start.py /usr/local/bin/oos-docservice-start
 COPY ds-organisationos.conf /etc/onlyoffice/documentserver/nginx/includes/ds-organisationos.conf
 RUN chmod 0755 /usr/local/bin/oos-office-entrypoint /usr/local/bin/oos-docservice-start && \
-    sed -i "s@^command=/var/www/onlyoffice/documentserver/server/DocService/docservice$@command=/usr/local/bin/oos-docservice-start@" /etc/supervisor/conf.d/ds-docservice.conf && \
+    sed -i 's@^command=/var/www/onlyoffice/documentserver/server/DocService/docservice$@command=/usr/local/bin/oos-docservice-start@' /etc/supervisor/conf.d/ds-docservice.conf && \
     cd /var/www/onlyoffice/documentserver && cp server/LICENSE.txt LICENSE.txt && cp server/3rd-Party.txt 3rd-Party.txt && cp -a server/license license && mkdir -p fonts && \
     LD_LIBRARY_PATH="$PWD/server/FileConverter/bin" server/tools/allfontsgen \
       --input="$PWD/core-fonts" --allfonts-web="$PWD/sdkjs/common/AllFonts.js" \
