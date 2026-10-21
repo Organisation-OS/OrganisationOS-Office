@@ -81,7 +81,9 @@ def main():
   run(['/usr/bin/python3',str(release/'firewall.py')])
   expectedHosts=api_hosts(m)
   existing=subprocess.run(['/usr/bin/docker','container','inspect','organisationos-office'],capture_output=True)
-  previousContainer=None
+  migrationPath=root/'api-origin-migration.json';migration=json.loads(migrationPath.read_bytes())if migrationPath.exists()else None
+  if migration is not None:require(migration['manifestSha256']==envSha)
+  previousContainer=migration['retainedContainer']if migration else None
   if existing.returncode==0:
    old=json.loads(existing.stdout)[0]
    if old['HostConfig']['ExtraHosts']!=expectedHosts:
@@ -91,8 +93,8 @@ def main():
     run(['/usr/bin/systemctl','stop','organisationos-office.service'],timeout=180)
     require(not json.loads(run(['/usr/bin/docker','container','inspect','organisationos-office']))[0]['State']['Running'])
     previousContainer='organisationos-office-api-before-'+old['Id'][:12]
-    write(root/'api-origin-migration.json',{'fromContainer':old['Id'],'retainedContainer':previousContainer,'previousHosts':old['HostConfig']['ExtraHosts'],'newHosts':expectedHosts,'imageId':IMAGE,'jwtSha256':digest(secret.read_bytes()),'dataVolumesRetained':True},0o600)
-    run(['/usr/bin/docker','rename','organisationos-office',previousContainer]);run(['/usr/bin/docker','network','disconnect','organisationos-office',previousContainer])
+    write(root/'api-origin-migration.json',{'manifestSha256':envSha,'fromContainer':old['Id'],'retainedContainer':previousContainer,'previousHosts':old['HostConfig']['ExtraHosts'],'newHosts':expectedHosts,'imageId':IMAGE,'jwtSha256':digest(secret.read_bytes()),'dataVolumesRetained':True},0o600)
+    run(['/usr/bin/docker','rename','organisationos-office',previousContainer])
   exists=subprocess.run(['/usr/bin/docker','container','inspect','organisationos-office'],capture_output=True)
   if exists.returncode!=0:
    cmd=['/usr/bin/docker','create','--name','organisationos-office','--label','organisationos.instance='+m['instanceId'],'--label','organisationos.recipe='+m['recipe']['sha256'],'--network','organisationos-office','--ip',ip,'--publish','127.0.0.1:18080:80','--memory','5368709120','--memory-swap','5368709120','--cpus','2','--pids-limit','512','--security-opt','no-new-privileges:true','--log-driver','local','--log-opt','max-size=10m','--log-opt','max-file=3','--restart','no','--dns','127.0.0.1','--env','ALLOW_PRIVATE_IP_ADDRESS=true','--env','ALLOW_META_IP_ADDRESS=false','--mount','type=bind,src='+str(secret)+',dst=/run/secrets/organisationos-office-jwt,readonly']
