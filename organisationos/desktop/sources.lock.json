@@ -37,7 +37,7 @@
     "web-apps": {
       "repository": "https://github.com/ONLYOFFICE/web-apps-pro.git",
       "commit": "9c0ca538c3b211052347df09d2a4d6781f023403",
-      "sourcePresent": false
+      "sourcePresent": true
     }
   },
   "buildTools": {
@@ -50,7 +50,7 @@
   "qualification": "NOT_RUN",
   "distribution": "NOT_PUBLISHED",
   "originalOrganisationOSDesktopSources": "NOT_FOUND_IN_SEARCHED_REPOSITORIES_AND_HANDOFFS",
-  "sourceCompleteness": "PARTIAL_DESKTOP_SHELL_AND_SDK_FETCHED; OTHER_COMPONENT_PINS_RECORDED",
+  "sourceCompleteness": "PARTIAL_DESKTOP_SHELL_SDK_WEB_APPS_FETCHED; OTHER_COMPONENT_PINS_RECORDED",
   "licenses": {
     "DesktopEditors": {
       "filename": "DesktopEditors-LICENSE.txt",
@@ -62,6 +62,10 @@
     },
     "desktop-sdk": {
       "filename": "desktop-sdk-LICENSE.txt",
+      "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040"
+    },
+    "web-apps": {
+      "filename": "web-apps-LICENSE.txt",
       "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040"
     }
   }

@@ -13,8 +13,8 @@ La source amont retenue est DesktopEditors v10.0.0 et ses gitlinks exacts, indiq
 dans sources.lock.json. Les composants core/sdkjs/web-apps diffèrent de ceux du
 serveur reçu : ne pas remplacer leurs pins par les sorties Linux du serveur.
 Les sources desktop-apps et desktop-sdk ont été récupérées et examinées sur DEV.
-Le lien amont web-apps pointe vers web-apps-pro : sa disponibilité et les droits
-associés restent à résoudre, sans substituer silencieusement web-apps public.
+Le lien amont web-apps pointe vers web-apps-pro. Son commit exact a été récupéré
+avec les accès existants, sans substitution par web-apps public.
 
 La recette amont est build_tools/configure.py puis make.py, module desktop,
 plateforme win_64, update=0. Elle appelle vcvarsall.bat et Qt qmake pour MSVC;
