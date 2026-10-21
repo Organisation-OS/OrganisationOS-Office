@@ -1,13 +1,16 @@
 # Dependency/init layer only. Every document-server executable and web asset is replaced below.
-FROM onlyoffice/documentserver@sha256:ca17889f10b11141cc6441836aebdd2835cf3e1b49681b2fd6e155c94b7850b3
+FROM onlyoffice/documentserver@sha256:ca17889f10b11141cc6441836aebdd2835cf3e1b49681b2fd6e155c94b7850b3 AS runtime-base
+FROM runtime-base
 USER root
 RUN rm -rf /var/www/onlyoffice/documentserver /var/www/onlyoffice/documentserver-example && mkdir -p /var/www/onlyoffice/documentserver
 COPY documentserver/ /var/www/onlyoffice/documentserver/
+# Pinned upstream JSON configuration helper; this is not a document-server engine.
+COPY --from=runtime-base /var/www/onlyoffice/documentserver/npm/ /var/www/onlyoffice/documentserver/npm/
 COPY provenance.json /var/www/onlyoffice/documentserver/web-apps/organisationos/provenance.json
 COPY source.html /var/www/onlyoffice/documentserver/web-apps/organisationos/source.html
 COPY oos-entrypoint.sh /usr/local/bin/oos-office-entrypoint
 RUN chmod 0755 /usr/local/bin/oos-office-entrypoint && \
-    cd /var/www/onlyoffice/documentserver && mkdir -p fonts && \
+    cd /var/www/onlyoffice/documentserver && cp server/LICENSE.txt LICENSE.txt && cp server/3rd-Party.txt 3rd-Party.txt && cp -a server/license license && mkdir -p fonts && \
     LD_LIBRARY_PATH="$PWD/server/FileConverter/bin" server/tools/allfontsgen \
       --input="$PWD/core-fonts" --allfonts-web="$PWD/sdkjs/common/AllFonts.js" \
       --allfonts="$PWD/server/FileConverter/bin/AllFonts.js" --images="$PWD/sdkjs/common/Images" \
