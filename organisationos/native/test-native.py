@@ -23,6 +23,11 @@ class NativeOffice(unittest.TestCase):
    with self.assertRaises(ValueError):n.validate(m)
   m=copy.deepcopy(self.m);m['image']['imageId']='sha256:'+'c'*64
   with self.assertRaises(ValueError):n.validate(m)
+ def test_split_api_hosts_are_signed_and_instance_scoped(self):
+  m=copy.deepcopy(self.m);m['schema']='oos-office-runtime-release-v2';m['publicApiOrigin']='https://portal.thecgp.com';self.assertEqual(n.api_hosts(n.validate(m)),['portal.thecgp.com:10.9.5.74'])
+  m['instanceId']=m['installationId']='b7a1f6b1-c4aa-4de7-95fb-29d509d3398d';m['publicApiOrigin']='https://api.villesadp.ca';self.assertEqual(n.api_hosts(n.validate(m)),['portal.villesadp.ca:10.100.8.13','api.villesadp.ca:10.100.8.13'])
+  m['publicApiOrigin']='https://portal.thecgp.com'
+  with self.assertRaises(ValueError):n.validate(m)
  def test_changed_recipe_refused(self):
   with self.assertRaises(ValueError):n.unpack(self.raw+b'x',self.m['recipe'])
  def test_no_instance_secret_packaged(self):self.assertFalse(n.FILES&{'jwt','key.pem','runtime.json','config.xml'})

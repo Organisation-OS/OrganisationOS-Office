@@ -24,11 +24,18 @@ def write(p,b,mode=0o644):
 def run(args,timeout=120):
  r=subprocess.run(args,capture_output=True,timeout=timeout);require(r.returncode==0);return r.stdout
 
+def api_hosts(m):
+ proxy,hostname,_,_=INSTANCES[m['instanceId']];hosts=[hostname+':'+proxy]
+ if m['schema']=='oos-office-runtime-release-v2':
+  api={'27c0be38-60bd-4dce-bb28-ef0088716a25':'portal.thecgp.com','b7a1f6b1-c4aa-4de7-95fb-29d509d3398d':'api.villesadp.ca'}[m['instanceId']];require(m['publicApiOrigin']=='https://'+api)
+  if api!=hostname:hosts.append(api+':'+proxy)
+ return hosts
+
 def validate(m):
- require(set(m)=={'schema','instanceId','installationId','sequence','operation','recipe','image'})
- require(m['schema']=='oos-office-runtime-release-v1'and m['instanceId']in INSTANCES and m['installationId']==m['instanceId']and type(m['sequence'])is int and m['sequence']>0 and m['operation']=='install')
+ require(set(m)==({'schema','instanceId','installationId','sequence','operation','recipe','image'}|({'publicApiOrigin'}if m.get('schema')=='oos-office-runtime-release-v2'else set())))
+ require(m['schema']in ['oos-office-runtime-release-v1','oos-office-runtime-release-v2']and m['instanceId']in INSTANCES and m['installationId']==m['instanceId']and type(m['sequence'])is int and m['sequence']>0 and m['operation']=='install')
  r=m['recipe'];require(set(r)=={'version','sourceCommit','sha256','size'}and r['version']=='0.1.0'and re.fullmatch('[a-f0-9]{40}',r['sourceCommit'])and re.fullmatch('[a-f0-9]{64}',r['sha256'])and type(r['size'])is int and 0<r['size']<200000)
- i=m['image'];require(set(i)=={'version','engineCommit','imageId','sha256','size'}and i['version']=='10.0.0.2'and i['engineCommit']=='caa398a5e4b29141b45b2efc56a06911990c1957'and i['imageId']==IMAGE and re.fullmatch('[a-f0-9]{64}',i['sha256'])and type(i['size'])is int and 0<i['size']<4*1024**3);return m
+ i=m['image'];require(set(i)=={'version','engineCommit','imageId','sha256','size'}and i['version']=='10.0.0.2'and i['engineCommit']=='caa398a5e4b29141b45b2efc56a06911990c1957'and i['imageId']==IMAGE and re.fullmatch('[a-f0-9]{64}',i['sha256'])and type(i['size'])is int and 0<i['size']<4*1024**3);api_hosts(m);return m
 
 def verify(e,key):
  require(set(e)=={'schema','purpose','algorithm','issuer','payload','signature'}and e['schema']=='oos-signed-v1'and e['purpose']==PURPOSE and e['algorithm']=='Ed25519'and e['issuer']==digest(key));Ed25519PublicKey.from_public_bytes(key).verify(base64.b64decode(e['signature'],validate=True),canonical({k:v for k,v in e.items()if k!='signature'}));return validate(e['payload'])
@@ -72,20 +79,35 @@ def main():
   if 'organisationos-office'not in nets:run(['/usr/bin/docker','network','create','--driver','bridge','--subnet',subnet,'--gateway',str(network[1]),'--opt','com.docker.network.bridge.name=oos-office0','--label','organisationos.instance='+m['instanceId'],'organisationos-office'])
   n=json.loads(run(['/usr/bin/docker','network','inspect','organisationos-office']))[0];require(n['Driver']=='bridge'and not n['EnableIPv6']and n['Labels'].get('organisationos.instance')==m['instanceId']and len(n['IPAM']['Config'])==1 and n['IPAM']['Config'][0].get('Subnet')==subnet and n['IPAM']['Config'][0].get('Gateway')==str(network[1]) and not n['IPAM']['Config'][0].get('IPRange'))
   run(['/usr/bin/python3',str(release/'firewall.py')])
+  expectedHosts=api_hosts(m)
+  existing=subprocess.run(['/usr/bin/docker','container','inspect','organisationos-office'],capture_output=True)
+  previousContainer=None
+  if existing.returncode==0:
+   old=json.loads(existing.stdout)[0]
+   if old['HostConfig']['ExtraHosts']!=expectedHosts:
+    require(m['schema']=='oos-office-runtime-release-v2'and state['sequence']==1 and m['sequence']==2)
+    require(old['Config']['Image']==IMAGE and old['Config']['Labels'].get('organisationos.instance')==m['instanceId']and old['HostConfig']['ExtraHosts']==[hostname+':'+proxy])
+    # Use the native SQL stop guard before touching the container. Preserve image, volumes and JWT.
+    run(['/usr/bin/systemctl','stop','organisationos-office.service'],timeout=180)
+    require(not json.loads(run(['/usr/bin/docker','container','inspect','organisationos-office']))[0]['State']['Running'])
+    previousContainer='organisationos-office-api-before-'+old['Id'][:12]
+    write(root/'api-origin-migration.json',{'fromContainer':old['Id'],'retainedContainer':previousContainer,'previousHosts':old['HostConfig']['ExtraHosts'],'newHosts':expectedHosts,'imageId':IMAGE,'jwtSha256':digest(secret.read_bytes()),'dataVolumesRetained':True},0o600)
+    run(['/usr/bin/docker','rename','organisationos-office',previousContainer]);run(['/usr/bin/docker','network','disconnect','organisationos-office',previousContainer])
   exists=subprocess.run(['/usr/bin/docker','container','inspect','organisationos-office'],capture_output=True)
   if exists.returncode!=0:
-   cmd=['/usr/bin/docker','create','--name','organisationos-office','--label','organisationos.instance='+m['instanceId'],'--label','organisationos.recipe='+m['recipe']['sha256'],'--network','organisationos-office','--ip',ip,'--publish','127.0.0.1:18080:80','--memory','5368709120','--memory-swap','5368709120','--cpus','2','--pids-limit','512','--security-opt','no-new-privileges:true','--log-driver','local','--log-opt','max-size=10m','--log-opt','max-file=3','--restart','no','--dns','127.0.0.1','--add-host',hostname+':'+proxy,'--env','ALLOW_PRIVATE_IP_ADDRESS=true','--env','ALLOW_META_IP_ADDRESS=false','--mount','type=bind,src='+str(secret)+',dst=/run/secrets/organisationos-office-jwt,readonly']
+   cmd=['/usr/bin/docker','create','--name','organisationos-office','--label','organisationos.instance='+m['instanceId'],'--label','organisationos.recipe='+m['recipe']['sha256'],'--network','organisationos-office','--ip',ip,'--publish','127.0.0.1:18080:80','--memory','5368709120','--memory-swap','5368709120','--cpus','2','--pids-limit','512','--security-opt','no-new-privileges:true','--log-driver','local','--log-opt','max-size=10m','--log-opt','max-file=3','--restart','no','--dns','127.0.0.1','--env','ALLOW_PRIVATE_IP_ADDRESS=true','--env','ALLOW_META_IP_ADDRESS=false','--mount','type=bind,src='+str(secret)+',dst=/run/secrets/organisationos-office-jwt,readonly']
+   for host in expectedHosts:cmd+=['--add-host',host]
    for name,dest in [('lib','/var/lib/onlyoffice'),('log','/var/log/onlyoffice'),('data','/var/www/onlyoffice/Data'),('fonts','/usr/share/fonts/truetype/custom')]:cmd+=['--mount','type=bind,src='+str(storage/name)+',dst='+dest]
    run(cmd+[IMAGE])
   current=json.loads(run(['/usr/bin/docker','container','inspect','organisationos-office']))[0];require(current['Config']['Labels']=={'organisationos.instance':m['instanceId'],'organisationos.recipe':m['recipe']['sha256']}or all(current['Config']['Labels'].get(k)==v for k,v in {'organisationos.instance':m['instanceId'],'organisationos.recipe':m['recipe']['sha256']}.items()));require(current['Config']['Image']==IMAGE and current['HostConfig']['PortBindings']=={'80/tcp':[{'HostIp':'127.0.0.1','HostPort':'18080'}]})
-  hc=current['HostConfig'];require(hc['Memory']==5368709120 and hc['MemorySwap']==5368709120 and hc['NanoCpus']==2000000000 and hc['PidsLimit']==512 and hc['Dns']==['127.0.0.1'] and hc['ExtraHosts']==[hostname+':'+proxy] and not hc['Privileged'])
+  hc=current['HostConfig'];require(hc['Memory']==5368709120 and hc['MemorySwap']==5368709120 and hc['NanoCpus']==2000000000 and hc['PidsLimit']==512 and hc['Dns']==['127.0.0.1'] and hc['ExtraHosts']==expectedHosts and not hc['Privileged'])
   require(set(current['NetworkSettings']['Networks'])=={'organisationos-office'})
   expectedMounts={'/run/secrets/organisationos-office-jwt':(str(secret),False),'/var/lib/onlyoffice':(str(storage/'lib'),True),'/var/log/onlyoffice':(str(storage/'log'),True),'/var/www/onlyoffice/Data':(str(storage/'data'),True),'/usr/share/fonts/truetype/custom':(str(storage/'fonts'),True)}
   require({x['Destination']:(x['Source'],x['RW'])for x in current['Mounts']}==expectedMounts)
   firewall='[Unit]\nDescription=OrganisationOS Office restricted egress\nAfter=docker.service\nBefore=organisationos-office.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 '+str(release/'firewall.py')+'\n[Install]\nWantedBy=multi-user.target\n'
   service='[Unit]\nDescription=OrganisationOS Office Powered by ONLYOFFICE\nAfter=docker.service organisationos-office-firewall.service\nRequires=docker.service organisationos-office-firewall.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 '+str(release/'controller.py')+' start\nExecStop=/usr/bin/python3 '+str(release/'controller.py')+' stop\nTimeoutStartSec=180\nTimeoutStopSec=180\n[Install]\nWantedBy=multi-user.target\n'
   write('/etc/systemd/system/organisationos-office-firewall.service',firewall.encode());write('/etc/systemd/system/organisationos-office.service',service.encode());run(['/usr/bin/systemctl','daemon-reload']);run(['/usr/bin/systemctl','enable','--now','organisationos-office-firewall.service','organisationos-office.service'])
-  receipt={'schema':'oos-office-runtime-installation-v1','status':'INSTALLED_LOCAL_RECEPTION_PENDING','instanceId':m['instanceId'],'sequence':m['sequence'],'manifestSha256':envSha,'recipeSha256':m['recipe']['sha256'],'imageId':IMAGE,'imageArchiveSha256':m['image']['sha256'],'privateListener':'127.0.0.1:18080','publicExposureCreated':False,'vaultCredentialImported':False,'gedBindingActivated':False,'secretGeneratedLocally':True,'noWorkstationChange':True,'bootstrapSha256':digest(P(__file__).read_bytes())}
+  receipt={'schema':'oos-office-runtime-installation-v1','status':'INSTALLED_LOCAL_RECEPTION_PENDING','instanceId':m['instanceId'],'sequence':m['sequence'],'manifestSha256':envSha,'recipeSha256':m['recipe']['sha256'],'imageId':IMAGE,'imageArchiveSha256':m['image']['sha256'],'privateListener':'127.0.0.1:18080','publicExposureCreated':False,'vaultCredentialImported':False,'gedBindingActivated':False,'secretGeneratedLocally':True,'noWorkstationChange':True,'bootstrapSha256':digest(P(__file__).read_bytes()),'apiOrigin':m.get('publicApiOrigin'),'apiHosts':expectedHosts,'retainedPriorContainer':previousContainer}
   write(root/(envSha+'.receipt.json'),receipt,0o600);fd,temp=tempfile.mkstemp(prefix='.current-',dir=root)
   with os.fdopen(fd,'wb')as f:os.fchmod(f.fileno(),0o600);f.write(canonical(receipt));f.flush();os.fsync(f.fileno())
   os.replace(temp,root/'current.json');print(json.dumps(receipt))
