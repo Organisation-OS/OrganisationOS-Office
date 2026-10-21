@@ -12,7 +12,10 @@
     "core": {
       "repository": "https://github.com/ONLYOFFICE/core.git",
       "commit": "3250a848ee4ef20c2fb8c38dc86350ec579124b8",
-      "sourcePresent": false
+      "sourcePresent": true,
+      "retainedOn": "orchestrator .20",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "tree": "3ffe1c5ba14ce81bc084bbce468d9fc5b3490533"
     },
     "desktop-apps": {
       "repository": "https://github.com/ONLYOFFICE/desktop-apps.git",
@@ -27,12 +30,18 @@
     "dictionaries": {
       "repository": "https://github.com/ONLYOFFICE/dictionaries.git",
       "commit": "d3223bbb777883db66ac3cd249f71c6ebdc992c7",
-      "sourcePresent": false
+      "sourcePresent": true,
+      "retainedOn": "orchestrator .20",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "tree": "cc8afc22486badd7318f8ddb39e3058f738075b6"
     },
     "sdkjs": {
       "repository": "https://github.com/ONLYOFFICE/sdkjs.git",
       "commit": "72b0421c0bbf9d01eed9cf14834ae47eb2df1b50",
-      "sourcePresent": false
+      "sourcePresent": true,
+      "retainedOn": "orchestrator .20",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "tree": "00027da187b7a534f37b2500e41e8ce47344114c"
     },
     "web-apps": {
       "repository": "https://github.com/ONLYOFFICE/web-apps-pro.git",
@@ -44,13 +53,13 @@
     "repository": "https://github.com/ONLYOFFICE/build_tools.git",
     "commit": "a9f9895b172b09595abcafe85d56fab163f9ecb7"
   },
-  "buildStatus": "BLOCKED_WINDOWS_TOOLCHAIN_NOT_AVAILABLE",
+  "buildStatus": "DEFERRED_WINDOWS_BUILDER_BY_USER",
   "binarySha256": null,
   "authenticode": "NO_BINARY",
   "qualification": "NOT_RUN",
   "distribution": "NOT_PUBLISHED",
   "originalOrganisationOSDesktopSources": "NOT_FOUND_IN_SEARCHED_REPOSITORIES_AND_HANDOFFS",
-  "sourceCompleteness": "PARTIAL_DESKTOP_SHELL_SDK_WEB_APPS_FETCHED; OTHER_COMPONENT_PINS_RECORDED",
+  "sourceCompleteness": "SIX_TOP_LEVEL_COMPONENTS_RETAINED_ACROSS_DEV_AND_ORCHESTRATOR; RECURSIVE_DEPENDENCIES_NOT_CLOSED",
   "licenses": {
     "DesktopEditors": {
       "filename": "DesktopEditors-LICENSE.txt",

@@ -1,0 +1,51 @@
+{
+  "status": "TOP_LEVEL_PINNED_SOURCES_RETAINED",
+  "at": 1792588506,
+  "components": [
+    {
+      "component": "core",
+      "repository": "https://github.com/ONLYOFFICE/core.git",
+      "commit": "3250a848ee4ef20c2fb8c38dc86350ec579124b8",
+      "tree": "3ffe1c5ba14ce81bc084bbce468d9fc5b3490533",
+      "retainedGitMirror": "/home/thecgp-admin/connectors-office-offline-20261020/desktop-sources/core.git",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "licenses": {
+        "LICENSE": {
+          "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040",
+          "bytes": 37800
+        }
+      },
+      "compiled": false,
+      "recursiveDependenciesClosed": false
+    },
+    {
+      "component": "sdkjs",
+      "repository": "https://github.com/ONLYOFFICE/sdkjs.git",
+      "commit": "72b0421c0bbf9d01eed9cf14834ae47eb2df1b50",
+      "tree": "00027da187b7a534f37b2500e41e8ce47344114c",
+      "retainedGitMirror": "/home/thecgp-admin/connectors-office-offline-20261020/desktop-sources/sdkjs.git",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "licenses": {
+        "LICENSE": {
+          "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040",
+          "bytes": 37800
+        }
+      },
+      "compiled": false,
+      "recursiveDependenciesClosed": false
+    },
+    {
+      "component": "dictionaries",
+      "repository": "https://github.com/ONLYOFFICE/dictionaries.git",
+      "commit": "d3223bbb777883db66ac3cd249f71c6ebdc992c7",
+      "tree": "cc8afc22486badd7318f8ddb39e3058f738075b6",
+      "retainedGitMirror": "/home/thecgp-admin/connectors-office-offline-20261020/desktop-sources/dictionaries.git",
+      "gitObjectIntegrity": "fsck-full-pass",
+      "licenses": {},
+      "compiled": false,
+      "recursiveDependenciesClosed": false
+    }
+  ],
+  "windowsBuilderAvailable": false,
+  "DEVBytesAdded": 0
+}
