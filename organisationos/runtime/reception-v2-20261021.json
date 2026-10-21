@@ -1,0 +1,51 @@
+{
+  "status": "ISOLATED_ENGINE_RECEIVED",
+  "engineSourceCommit": "caa398a5e4b29141b45b2efc56a06911990c1957",
+  "upstreamVersion": "v10.0.0",
+  "upstreamRepository": "https://github.com/ONLYOFFICE/DocumentServer",
+  "forkRepository": "https://github.com/Organisation-OS/OrganisationOS-Office",
+  "version": "10.0.0.2",
+  "imageId": "sha256:c79aa0259070234ef10cbdb5ab11d6305870ce69ac0929b97066543ef68c317a",
+  "baseImage": "onlyoffice/documentserver@sha256:ca17889f10b11141cc6441836aebdd2835cf3e1b49681b2fd6e155c94b7850b3",
+  "engineBinaries": {
+    "server/DocService/docservice": {
+      "sha256": "69b15095815aae7e02ce6405ecb8a51f0097877b5d287c3db579f06c090b670c",
+      "size": 243522736
+    },
+    "server/FileConverter/converter": {
+      "sha256": "5982dd376925277f5db409a512ccdb5ed41ad6c3aaf2316b2ef7cadadda9074d",
+      "size": 138165010
+    },
+    "server/tools/allfontsgen": {
+      "sha256": "2801f48ca09bab2e38b8a8a4797ef7f433006746d387d4be76ffc0dc69fd93db",
+      "size": 134192
+    },
+    "server/tools/allthemesgen": {
+      "sha256": "ec6bc053cb6008f153f465422e24f941ce6382d61027ddb89f5ad26ef98123e9",
+      "size": 171584
+    }
+  },
+  "sourceBuildExitCode": 0,
+  "imageExport": "Manifest created; client export interrupted by disk reserve guard; complete image independently opened, binary hashes verified, and runtime received",
+  "checks": {
+    "formats": [
+      "DOCX",
+      "XLSX",
+      "PPTX"
+    ],
+    "actualKeyboardEdits": 3,
+    "authenticatedIntermediateAndCloseSaves": 6,
+    "editedOoxmlContentsVerified": 6,
+    "signedSnapshotSchema": "organisationos-converted-changes-v2",
+    "sourceHashEqualsOriginal": true,
+    "convertedBaseSeparate": true,
+    "intermediateAndCloseDeduplicatedByCore": true,
+    "coreActualReceiptChecks": 25,
+    "jwtPrivacyChecks": 7
+  },
+  "productionInstallation": "NOT_RUN",
+  "canonicalGedAdmission": "NOT_RUN",
+  "runtimePersistence": "MEMORY_ONLY; process epoch changes on restart",
+  "sourcesAvailable": true,
+  "officialImageUsedAsDependencyLayerOnly": true
+}
