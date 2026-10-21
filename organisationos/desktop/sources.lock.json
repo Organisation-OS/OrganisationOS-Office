@@ -1,0 +1,68 @@
+{
+  "schema": "organisationos-office-desktop-source-lock-v1",
+  "product": "OrganisationOS Office Desktop — Powered by ONLYOFFICE",
+  "candidateVersion": "10.0.0-oos.desktop.1",
+  "architecture": "windows-x64",
+  "upstream": {
+    "repository": "https://github.com/ONLYOFFICE/DesktopEditors.git",
+    "tag": "v10.0.0",
+    "commit": "47522aa00c12940ee2c4e2cf1546044e4af8ee75"
+  },
+  "components": {
+    "core": {
+      "repository": "https://github.com/ONLYOFFICE/core.git",
+      "commit": "3250a848ee4ef20c2fb8c38dc86350ec579124b8",
+      "sourcePresent": false
+    },
+    "desktop-apps": {
+      "repository": "https://github.com/ONLYOFFICE/desktop-apps.git",
+      "commit": "8f452c7f703b795dcc09012ba6517df4ca47f9bc",
+      "sourcePresent": true
+    },
+    "desktop-sdk": {
+      "repository": "https://github.com/ONLYOFFICE/desktop-sdk.git",
+      "commit": "2f16486ade20ad7deff17968a8845f955089fa57",
+      "sourcePresent": true
+    },
+    "dictionaries": {
+      "repository": "https://github.com/ONLYOFFICE/dictionaries.git",
+      "commit": "d3223bbb777883db66ac3cd249f71c6ebdc992c7",
+      "sourcePresent": false
+    },
+    "sdkjs": {
+      "repository": "https://github.com/ONLYOFFICE/sdkjs.git",
+      "commit": "72b0421c0bbf9d01eed9cf14834ae47eb2df1b50",
+      "sourcePresent": false
+    },
+    "web-apps": {
+      "repository": "https://github.com/ONLYOFFICE/web-apps-pro.git",
+      "commit": "9c0ca538c3b211052347df09d2a4d6781f023403",
+      "sourcePresent": false
+    }
+  },
+  "buildTools": {
+    "repository": "https://github.com/ONLYOFFICE/build_tools.git",
+    "commit": "a9f9895b172b09595abcafe85d56fab163f9ecb7"
+  },
+  "buildStatus": "BLOCKED_WINDOWS_TOOLCHAIN_NOT_AVAILABLE",
+  "binarySha256": null,
+  "authenticode": "NO_BINARY",
+  "qualification": "NOT_RUN",
+  "distribution": "NOT_PUBLISHED",
+  "originalOrganisationOSDesktopSources": "NOT_FOUND_IN_SEARCHED_REPOSITORIES_AND_HANDOFFS",
+  "sourceCompleteness": "PARTIAL_DESKTOP_SHELL_AND_SDK_FETCHED; OTHER_COMPONENT_PINS_RECORDED",
+  "licenses": {
+    "DesktopEditors": {
+      "filename": "DesktopEditors-LICENSE.txt",
+      "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040"
+    },
+    "desktop-apps": {
+      "filename": "desktop-apps-LICENSE.txt",
+      "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040"
+    },
+    "desktop-sdk": {
+      "filename": "desktop-sdk-LICENSE.txt",
+      "sha256": "3a9b4b6ab698d668dcedcda1c2da598f4ca9789a0d8b4aefb90e00e2cb425040"
+    }
+  }
+}
