@@ -2,7 +2,7 @@
 set -euo pipefail
 # build_tools/version differs from the pinned DocumentServer release. Never inherit its default.
 export PRODUCT_VERSION=10.0.0
-export BUILD_NUMBER=1
+export BUILD_NUMBER=2
 mkdir -p /work/build-evidence
 exec > >(tee /work/build-evidence/build.log) 2>&1
 trap 'status=$?; printf "%s\n" "$status" > /work/build-evidence/exit-status; dpkg-query -W > /work/build-evidence/toolchain-packages.tsv; exit "$status"' EXIT
@@ -22,6 +22,7 @@ done
 grep -Fq 'JWT verification rejected: %s' /work/server/DocService/sources/DocsCoServer.js
 if grep -Fq 'checkJwt error: name = %s message = %s token = %s' /work/server/DocService/sources/DocsCoServer.js; then exit 1; fi
 grep -Fq 'organisationosSnapshot' /work/server/FileConverter/sources/converter.js
+grep -Fq 'organisationos-converted-changes-v2' /work/server/Common/sources/oosSnapshotIdentity.js
 cd /work/build_tools
 ./tools/linux/python3/bin/python3 configure.py --module server --update 0 --sysroot 1 --platform linux_64 --qt-dir /work/build_tools/tools/linux/qt_build/Qt-5.9.9
 ./tools/linux/python3/bin/python3 make.py

@@ -37,3 +37,12 @@ Les avertissements de copie concernant Metrics/modern-syslog et l’exemple Node
 ## Correctif de confidentialité du serveur
 
 La réception réelle de la version épinglée a montré que `checkJwt` journalisait un jeton rejeté au niveau WARN et la charge décodée au niveau DEBUG. Le correctif nommé supprime ces valeurs et le message libre de l’erreur ; seule sa classe est conservée. La recette applique le patch une fois et refuse une base incompatible. Une qualification doit soumettre un JWT synthétique identifiable puis vérifier son absence dans les journaux de l’image reconstruite. Aucun secret réel n’a été utilisé pendant ce constat.
+
+
+## Réception I et correction de la preuve de sauvegarde (21 octobre 2026)
+
+La construction I depuis `e0f4e9fb795e89bc6718b0f390f9e706faa82cb7` démarre et qualifie réellement l'édition DOCX/XLSX/PPTX, six retours avec contenu et la confidentialité des journaux (sept contrôles). Elle reste refusée pour l'admission GED : le champ baseSha256 décrit Editor.bin après conversion et non le document source initial ; externalChangeInfo peut être présent pour une sauvegarde intermédiaire ordinaire sans que ses changements synthétiques soient appliqués. Aucun de ces résultats n'autorise une mise en production ni ne prouve la reproductibilité binaire.
+
+La preuve v2 distingue sourceSha256 (octets téléchargés avant conversion, témoin interne borné conservé dans le cache de la session) et baseSha256 (base convertie). Le condensat de séquence lie les deux. Une source absente ou invalide rend la preuve non fiable ; le consommateur doit garder le contenu en récupération privée. Le témoin n'est ni une URL ni un secret. L'indicateur de changements externes est activé uniquement au point où la branche de repli est effectivement utilisée. Le serveur conserve cette preuve bornée dans le retour signé même lorsque l'historique détaillé dépasse la limite amont.
+
+Le numéro de construction suivant est 10.0.0.2. `test-snapshot-identity.cjs` couvre 21 assertions du helper ; la réception réelle de la nouvelle construction et son admission GED restent obligatoires. Sur un arbre ayant déjà reçu l'ancien patch v1, retirer exactement ce patch conservé avant d'appliquer v2, sans réinitialiser les autres modifications. Ne pas présenter une qualification du helper comme une réception du convertisseur reconstruit.

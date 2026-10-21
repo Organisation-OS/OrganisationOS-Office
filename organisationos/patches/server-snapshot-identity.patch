@@ -1,14 +1,21 @@
 --- a/FileConverter/sources/converter.js
 +++ b/FileConverter/sources/converter.js
-@@ -705,6 +705,7 @@
+@@ -705,6 +705,9 @@
      serverVersion: commonDefines.buildVersion,
      changes: []
    };
-+  const oosSnapshot = require('../../Common/sources/oosSnapshotIdentity').create(sha256);
++  const oosIdentity = require('../../Common/sources/oosSnapshotIdentity');
++  const oosSnapshot = oosIdentity.create(sha256, oosIdentity.readSource(path.join(tempDirs.source, 'organisationos-source.json')));
++  let oosExternalChangesApplied = false;
    const forceSave = cmd.getForceSave();
    let forceSaveTime;
    let forceSaveIndex = Number.MAX_VALUE;
-@@ -752,6 +753,7 @@
+@@ -748,10 +751,12 @@
+     }
+     if (0 === changes.length && extChanges) {
+       changes = extChanges;
++      oosExternalChangesApplied = true;
+     }
      extChanges = undefined;
      for (let i = 0; i < changes.length; ++i) {
        const change = changes[i];
@@ -16,23 +23,30 @@
        if (null === changesAuthor || changesAuthor !== change.user_id_original) {
          if (null !== changesAuthor) {
            yield* streamEndBin(streamObj);
-@@ -796,6 +798,7 @@
+@@ -796,6 +801,7 @@
    }
    cmd.setUserId(changesAuthor);
    cmd.setUserIndex(changesIndex);
-+  changesHistory.organisationosSnapshot = oosSnapshot.finish(!cmd.getExternalChangeInfo());
++  changesHistory.organisationosSnapshot = oosSnapshot.finish(!oosExternalChangesApplied);
    yield fs.promises.writeFile(path.join(tempDirs.result, 'changesHistory.json'), JSON.stringify(changesHistory), 'utf8');
    ctx.logger.debug('processChanges end');
    return res;
-@@ -836,6 +839,7 @@
+@@ -836,6 +842,9 @@
      serverVersion: commonDefines.buildVersion,
      changes: []
    };
-+  const oosSnapshot = require('../../Common/sources/oosSnapshotIdentity').create(sha256);
++  const oosIdentity = require('../../Common/sources/oosSnapshotIdentity');
++  const oosSnapshot = oosIdentity.create(sha256, oosIdentity.readSource(path.join(tempDirs.source, 'organisationos-source.json')));
++  let oosExternalChangesApplied = false;
    const forceSave = cmd.getForceSave();
    let forceSaveTime;
    let forceSaveIndex = Number.MAX_VALUE;
-@@ -882,6 +886,7 @@
+@@ -878,10 +887,12 @@
+     }
+     if (0 === changes.length && extChanges) {
+       changes = extChanges;
++      oosExternalChangesApplied = true;
+     }
      extChanges = undefined;
      for (let i = 0; i < changes.length; ++i) {
        const change = changes[i];
@@ -40,14 +54,27 @@
        if (null === changesAuthor || changesAuthor !== change.user_id_original) {
          if (null !== changesAuthor) {
            yield* streamEnd(streamObj, ']');
-@@ -928,6 +933,7 @@
+@@ -928,6 +939,7 @@
    }
    cmd.setUserId(changesAuthor);
    cmd.setUserIndex(changesIndex);
-+  changesHistory.organisationosSnapshot = oosSnapshot.finish(!cmd.getExternalChangeInfo());
++  changesHistory.organisationosSnapshot = oosSnapshot.finish(!oosExternalChangesApplied);
    yield fs.promises.writeFile(path.join(tempDirs.result, 'changesHistory.json'), JSON.stringify(changesHistory), 'utf8');
    ctx.logger.debug('processChanges end');
    return res;
+@@ -1226,6 +1238,12 @@
+         error = yield* downloadFile(ctx, url, dataConvert.fileFrom, withAuthorization, isInJwtToken, headers);
+       }
+       if (constants.NO_ERROR === error) {
++        // Bind later converted snapshots to the exact downloaded source before any conversion.
++        if (fs.existsSync(dataConvert.fileFrom)) {
++          const sourceSha256 = yield utils.checksumFile('sha256', dataConvert.fileFrom);
++          yield fs.promises.writeFile(path.join(tempDirs.result, 'organisationos-source.json'),
++            JSON.stringify({schema: 'organisationos-source-v1', sourceSha256}), {encoding: 'utf8', flag: 'wx'});
++        }
+         replaceEmptyFile(ctx, dataConvert.fileFrom, format, cmd.getLCID());
+       }
+       if (clientStatsD) {
 --- a/DocService/sources/canvasservice.js
 +++ b/DocService/sources/canvasservice.js
 @@ -1170,7 +1170,10 @@
@@ -56,24 +83,34 @@
              const data = yield storage.getObject(ctx, savePathHistory);
 -            outputSfc.setChangeHistory(JSON.parse(data.toString('utf-8')));
 +            const history = JSON.parse(data.toString('utf-8'));
-+          outputSfc.setChangeHistory(history);
-+          // Retain this bounded proof even when the upstream header-size guard drops verbose history.
-+          if (history.organisationosSnapshot) outputSfc.organisationosSnapshot = history.organisationosSnapshot;
++            outputSfc.setChangeHistory(history);
++            // Retain this bounded proof even when the upstream header-size guard drops verbose history.
++            if (history.organisationosSnapshot) outputSfc.organisationosSnapshot = history.organisationosSnapshot;
              const changeUrl = yield storage.getSignedUrl(ctx, baseUrl, savePathChanges, commonDefines.c_oAscUrlTypes.Temporary);
              outputSfc.setChangeUrl(changeUrl);
            } else {
 --- /dev/null
 +++ b/Common/sources/oosSnapshotIdentity.js
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,37 @@
 +/* OrganisationOS addition; SPDX-License-Identifier: AGPL-3.0-only */
 +'use strict';
 +const crypto = require('crypto');
-+exports.create = function(baseSha256) {
++const fs = require('fs');
++exports.readSource = function(file) {
++  try {
++    const stat = fs.lstatSync(file);
++    if (!stat.isFile() || stat.size > 256) return null;
++    const source = JSON.parse(fs.readFileSync(file, 'utf8'));
++    if (source.schema !== 'organisationos-source-v1' || typeof source.sourceSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(source.sourceSha256)) return null;
++    return source.sourceSha256;
++  } catch (_) { return null; }
++};
++exports.create = function(baseSha256, sourceSha256) {
 +  let count = 0;
-+  let reliable = typeof baseSha256 === 'string' && /^[a-f0-9]{64}$/.test(baseSha256);
++  let reliable = [baseSha256, sourceSha256].every(value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value));
 +  let finished = false;
 +  const hash = crypto.createHash('sha256');
-+  hash.update('organisationos-converted-changes-v1\n' + String(baseSha256) + '\n');
++  hash.update('organisationos-converted-changes-v2\n' + String(sourceSha256) + '\n' + String(baseSha256) + '\n');
 +  return {
 +    append(index, data) {
 +      if (finished) throw new Error('Snapshot identity already finished');
@@ -87,8 +124,8 @@
 +    finish(ordinaryChanges) {
 +      if (finished) throw new Error('Snapshot identity already finished');
 +      finished = true;
-+      return {schema: 'organisationos-converted-changes-v1', reliable: reliable && ordinaryChanges === true,
-+        baseSha256, changeCount: count, changesSha256: hash.digest('hex')};
++      return {schema: 'organisationos-converted-changes-v2', reliable: reliable && ordinaryChanges === true,
++        sourceSha256, baseSha256, changeCount: count, changesSha256: hash.digest('hex')};
 +    }
 +  };
 +};
