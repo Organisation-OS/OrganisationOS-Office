@@ -1,0 +1,75 @@
+{
+  "schema": "oos-office-real-return-ged-reception-v1",
+  "status": "PASS",
+  "at": "2026-10-21T04:27:35.099456+00:00",
+  "engineSource": "caa398a5e4b29141b45b2efc56a06911990c1957",
+  "engineVersion": "10.0.0.2",
+  "engineImage": "sha256:c79aa0259070234ef10cbdb5ab11d6305870ce69ac0929b97066543ef68c317a",
+  "coreSource": "fe75b18",
+  "checks": [
+    "docx:two_versions_only",
+    "docx:original_immutable_hash_preserved",
+    "docx:current_blob_hash_and_size_match",
+    "docx:actual_clam_PASS",
+    "docx:room_closed",
+    "docx:typed_marker_in_canonical_OOXML",
+    "docx:force_and_final_same_admission_no_second_fetch",
+    "xlsx:two_versions_only",
+    "xlsx:original_immutable_hash_preserved",
+    "xlsx:current_blob_hash_and_size_match",
+    "xlsx:actual_clam_PASS",
+    "xlsx:room_closed",
+    "xlsx:typed_marker_in_canonical_OOXML",
+    "xlsx:force_and_final_same_admission_no_second_fetch",
+    "pptx:two_versions_only",
+    "pptx:original_immutable_hash_preserved",
+    "pptx:current_blob_hash_and_size_match",
+    "pptx:actual_clam_PASS",
+    "pptx:room_closed",
+    "pptx:typed_marker_in_canonical_OOXML",
+    "pptx:force_and_final_same_admission_no_second_fetch",
+    "unauthenticated_callback_refused"
+  ],
+  "formats": {
+    "docx": {
+      "versions": 2,
+      "sourceSha256": "4f1a13e81152b7fa4e963904b08f52b4aec836e0347d2810f38951c528c64c74",
+      "currentSha256": "7925f2877e0ad7eb88b3c04b6647a38a8729c1895dcd3e6ecb4ea1c7ad5a59ac",
+      "antivirus": "PASS",
+      "roomClosed": true,
+      "currentVersionId": "98e89658-d891-4284-b49d-fb95d931580b",
+      "typedMarkerFound": true
+    },
+    "xlsx": {
+      "versions": 2,
+      "sourceSha256": "c4496e79f02b04198bf52fb051ea87cb0e4f423451ca2c8460d135a0279493de",
+      "currentSha256": "63e28b95a03142a9fd0ab94d96188d019327c7950465bfb1f0575a3f20f5c06b",
+      "antivirus": "PASS",
+      "roomClosed": true,
+      "currentVersionId": "a8100255-3a7f-4f3e-b7b0-55b9facbc4ca",
+      "typedMarkerFound": true
+    },
+    "pptx": {
+      "versions": 2,
+      "sourceSha256": "24f936a0b762eb935984aca6701c7ebed5b6abb700210e5d050b5b61be4a31f8",
+      "currentSha256": "a36e29fb624b7fec5adbbcdf840d0a23463aa48b44169464dceb26d9e52c936a",
+      "antivirus": "PASS",
+      "roomClosed": true,
+      "currentVersionId": "e048056f-0125-47e2-b02f-ed35d82a870b",
+      "typedMarkerFound": true
+    }
+  },
+  "actualKeyboardInput": true,
+  "actualEngineJwtCallbacks": true,
+  "actualPinnedTlsReturnDownload": true,
+  "actualClamAv": true,
+  "actualMariaDbAndImmutableStorage": true,
+  "productionWrites": 0,
+  "limits": [
+    "Private synthetic HTTP adapter; not installed production HTTP routes",
+    "Native vault composition separately tested, fixture uses protected synthetic key",
+    "Fixture account capabilities; native document ACLs/activity checked by VersionAdmission",
+    "Browser trusts dedicated test certificate; backend transport validates CA and pinned DNS",
+    "Clean Windows Desktop and production user journey NOT_RUN"
+  ]
+}
