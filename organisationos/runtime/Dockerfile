@@ -12,7 +12,7 @@ COPY provenance.json /var/www/onlyoffice/documentserver/web-apps/organisationos/
 COPY source.html /var/www/onlyoffice/documentserver/web-apps/organisationos/source.html
 COPY oos-entrypoint.sh /usr/local/bin/oos-office-entrypoint
 COPY oos-docservice-start.py /usr/local/bin/oos-docservice-start
-COPY ds-organisationos.conf /etc/onlyoffice/documentserver/nginx/includes/ds-organisationos.conf
+COPY ds-organisationos.conf /etc/nginx/includes/ds-organisationos.conf
 RUN chmod 0755 /usr/local/bin/oos-office-entrypoint /usr/local/bin/oos-docservice-start && \
     sed -i 's@^command=/var/www/onlyoffice/documentserver/server/DocService/docservice$@command=/usr/local/bin/oos-docservice-start@' /etc/supervisor/conf.d/ds-docservice.conf && \
     cd /var/www/onlyoffice/documentserver && cp server/LICENSE.txt LICENSE.txt && cp server/3rd-Party.txt 3rd-Party.txt && cp -a server/license license && mkdir -p fonts && \
